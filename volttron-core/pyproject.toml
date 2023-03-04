@@ -1,0 +1,69 @@
+[tool.poetry]
+name = "volttron"
+version = "10.0.2-rc"
+description = "VOLTTRON™ is an open source platform for distributed sensing and control. The platform provides services for collecting and storing data from buildings and devices and provides an environment for developing applications which interact with that data."
+authors = ["volttron <volttron@pnnl.gov>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://volttron.org"
+repository = "https://github.com/eclipse-volttron/volttron-core"
+documentation = "https://volttron.readthedocs.org"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+packages = [
+    { include = "volttron", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyzmq = "^22.3.0"
+gevent = "^21.12.0"
+PyYAML = "^6.0"
+toml = "^0.10.2"
+dateutils = "^0.6.12"
+tzlocal = "^4.1"
+psutil = "^5.9.0"
+cryptography = "^36.0.1"
+watchdog-gevent = "^0.1.1"
+pip = "22.2.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+mock = "^4.0.3"
+pre-commit = "^2.17.0"
+yapf = "^0.32.0"
+toml = "^0.10.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+volttron = 'volttron.server.__main__:main'
+vcfg = 'volttron.client.commands.config:main'
+volttron-cfg = 'volttron.client.commands.config:main'
+vctl = 'volttron.client.commands.control:main'
+volttron-ctl = 'volttron.client.commands.control:main'
+
+[tool.yapfignore]
+ignore_patterns = [
+    ".venv/**",
+    ".pytest_cache/**",
+    "dist/**",
+    "docs/**"
+]
+
+[tool.yapf]
+based_on_style = "pep8"
+spaces_before_comment = 4
+column_limit = 99
+split_before_logical_operator = true
