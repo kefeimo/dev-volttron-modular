@@ -397,6 +397,15 @@ class PlatformDriverAgent(Agent):
                              self.group_offset_interval, self.publish_depth_first_all,
                              self.publish_breadth_first_all, self.publish_depth_first,
                              self.publish_breadth_first)
+        print("===============driver")
+        print(f"driver {driver}")
+        print(f"dir(dirver) {dir(driver)}")
+        print(f"dir(topic) {(topic)}")
+        print(f"dir(group) {(group)}")
+        print(f"dir(config_name) {(config_name)}")
+        print(f"dir(contents) {(contents)}")
+
+
         _log.debug("SPAWNING GREENLET....")
         gevent.spawn(driver.core.run)
         self.instances[topic] = driver
@@ -470,6 +479,7 @@ class PlatformDriverAgent(Agent):
         :type kwargs: arguments pointer
         """
         return self.instances[path].get_point(point_name, **kwargs)
+        # return f"path {path}, point_name {point_name}"
 
     @RPC.export
     def set_point(self, path, point_name, value, **kwargs):

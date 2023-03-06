@@ -30,7 +30,7 @@ def main():
     peer = "platform_driver"
 
     peer_method = "get_point"
-    rs = a.vip.rpc.call(peer, peer_method).get(timeout=10)
+    rs = a.vip.rpc.call(peer, peer_method, "campus-vm/building-vm/dnp3", "AnalogInput_index0").get(timeout=10)
     print(f"========== rs {rs}")
 
 
