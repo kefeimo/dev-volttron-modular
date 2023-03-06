@@ -58,6 +58,7 @@ class FakeRegister(BaseRegister):
         self.reg_def = reg_definition
         self.master_application = master_application
         self.reg_type = reg_type
+        # print(f"======== akeRegister(BaseRegister) read_only {read_only}")
         super(FakeRegister, self).__init__("byte", read_only, pointName, units, description='')
 
 
