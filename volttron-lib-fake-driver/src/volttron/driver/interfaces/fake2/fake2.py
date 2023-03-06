@@ -125,10 +125,12 @@ class FakeRegister(BaseRegister):
                                                      val_to_set=set_value)
 
 
-class Fake(BasicRevert, BaseInterface):
+class Fake434324(BasicRevert, BaseInterface):
+    # Note: the name of the driver_instance doesn't matter,
+    # as long as it inherit from BasicRevert, BaseInterface
 
     def __init__(self, **kwargs):
-        super(Fake, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.master_application = None  # place-holder: configuration happen in def config(self, ...)
 
     def configure(self, config_dict, registry_config_str):
