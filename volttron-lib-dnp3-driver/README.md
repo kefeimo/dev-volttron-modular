@@ -1,7 +1,7 @@
-# volttron-lib-fake-driver
+# volttron-lib-dnp3-driver
 
-![Passing?](https://github.com/VOLTTRON/volttron-lib-fake-driver/actions/workflows/run-tests.yml/badge.svg)
-[![pypi version](https://img.shields.io/pypi/v/volttron-lib-fake-driver.svg)](https://pypi.org/project/volttron-lib-fake-driver/)
+![Passing?](https://github.com/VOLTTRON/volttron-lib-dnp3-driver/actions/workflows/run-tests.yml/badge.svg)
+[![pypi version](https://img.shields.io/pypi/v/volttron-lib-dnp3-driver.svg)](https://pypi.org/project/volttron-lib-dnp3-driver/)
 
 The FakeDriver is a way to quickly see data published to the message bus in a format that mimics what a true Driver would produce. This is an extremely simple implementation of the [VOLTTRON driver framework](https://volttron.readthedocs.io/en/develop/agent-framework/driver-framework/drivers-overview.html#driver-framework). This driver does not connect to any actual device and instead produces random and or pre-configured values.
 

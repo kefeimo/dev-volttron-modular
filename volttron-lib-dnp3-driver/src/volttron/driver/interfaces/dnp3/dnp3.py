@@ -147,19 +147,17 @@ class Dnp3Driver(BasicRevert, BaseInterface):
 
         return register.value
 
-    def _set_point(self, point_name, value):
+    def _set_point(self, point_name, value: RegisterValue):
         register: Dnp3Register = self.get_register_by_name(point_name)
         if register.read_only:
             raise RuntimeError("Trying to write to a point configured read only: " + point_name)
-        # register.value = register.reg_type(value)
-        # register.value = register.set_register_value(value=value)
+        # register.value = register.reg_type(value)  # old logic to cast value to reg_type value (not robust)
         register.value = value
-        # Note: simply retry logic
+        # Note: simple retry logic
         retry_max = 10
         for n in range(retry_max):
             if register.value == value:
                 return register.value
-            # register.value = register.set_register_value(value=value)
             register.value = value
             sleep(1)
             # _log.info(f"Starting set_point {n}th RETRY for {point_name}")
@@ -191,6 +189,7 @@ class Dnp3Driver(BasicRevert, BaseInterface):
             default_value = regDef.get("Starting Value", 'sin').strip()
             if not default_value:
                 default_value = None
+            # Note: logic to pass data type from csv config to Python type (by default using string/str)
             type_name = regDef.get("Type", 'string')
             reg_type = type_mapping.get(type_name, str)
 

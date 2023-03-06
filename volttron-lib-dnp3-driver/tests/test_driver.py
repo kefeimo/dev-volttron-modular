@@ -22,7 +22,7 @@
 # ===----------------------------------------------------------------------===
 # }}}
 
-"""Integration tests for volttron-lib-fake-driver"""
+"""Integration tests for volttron-lib-dnp3-driver"""
 
 import gevent
 import pytest
@@ -32,7 +32,7 @@ from volttrontesting.platformwrapper import PlatformWrapper
 
 
 def test_scrape_all(publish_agent):
-    # add Fake Driver to Platform Driver
+    # add DNP3 Driver to Platform Driver
     registry_config_string = """Point Name,Volttron Point Name,Units,Units Details,Writable,Starting Value,Type,Notes
         SampleLong1,SampleLong1,Enumeration,1 through 13,FALSE,50,int,Status indicator of service switch
         SampleWritableShort1,SampleWritableShort1,%,0.00 to 100.00 (20 default),TRUE,20,int,Minimum damper position during the standard mode
@@ -40,29 +40,29 @@ def test_scrape_all(publish_agent):
     publish_agent.vip.rpc.call(CONFIGURATION_STORE,
                                "manage_store",
                                PLATFORM_DRIVER,
-                               "fake.csv",
+                               "dnp3.csv",
                                registry_config_string,
                                config_type="csv")
 
     driver_config = {
         "driver_config": {},
-        "registry_config": "config://fake.csv",
+        "registry_config": "config://dpn3.csv",
         "interval": 5,
         "timezone": "US/Pacific",
         "heart_beat_point": "Heartbeat",
-        "driver_type": "fake"
+        "driver_type": "dnp3"
     }
     publish_agent.vip.rpc.call(CONFIGURATION_STORE,
                                "manage_store",
                                PLATFORM_DRIVER,
-                               "devices/fake",
+                               "devices/dnp3",
                                jsonapi.dumps(driver_config),
                                config_type='json')
 
     gevent.sleep(10)
 
     actual_scrape_all_results = publish_agent.vip.rpc.call(PLATFORM_DRIVER, "scrape_all",
-                                                           "fake").get(timeout=10)
+                                                           "dnp3").get(timeout=10)
     expected_scrape_all_results = {
         'SampleLong1': 50,
         'SampleBool1': True,
@@ -72,8 +72,9 @@ def test_scrape_all(publish_agent):
 
 
 def test_get_point_set_point(publish_agent):
+    # TODO: implement this for DNP3 driver
     actual_sampleWriteableShort1 = publish_agent.vip.rpc.call(
-        PLATFORM_DRIVER, "get_point", "fake", "SampleWritableShort1").get(timeout=10)
+        PLATFORM_DRIVER, "get_point", "dnp3", "SampleWritableShort1").get(timeout=10)
     assert actual_sampleWriteableShort1 == 20
 
     #set_point
@@ -125,7 +126,7 @@ def publish_agent(volttron_instance: PlatformWrapper):
     publish_agent.vip.rpc.call(CONFIGURATION_STORE,
                                "manage_store",
                                PLATFORM_DRIVER,
-                               "fake.csv",
+                               "dnp3.csv",
                                registry_config_string,
                                config_type="csv")
 
