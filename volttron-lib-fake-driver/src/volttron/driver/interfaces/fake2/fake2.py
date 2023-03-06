@@ -24,10 +24,6 @@
 
 import datetime
 import logging
-import math
-import random
-from math import pi
-
 from volttron.driver.base.interfaces import (BaseInterface, BaseRegister, BasicRevert)
 from dnp3_python.dnp3station.master_new import MyMasterNew
 
@@ -49,7 +45,7 @@ RegisterValue = Union[int, str, float, bool]
 Register = TypeVar("Register", bound=BaseRegister)
 
 
-class FakeRegister(BaseRegister):
+class Dnp3Register(BaseRegister):
 
     def __init__(self, read_only, pointName, units, reg_type, default_value=None, description='',
                  reg_definition=None, master_application=None):
@@ -60,29 +56,30 @@ class FakeRegister(BaseRegister):
         self.reg_def = reg_definition
         self.master_application = master_application
         self.reg_type = reg_type
-        super(FakeRegister, self).__init__("byte", read_only, pointName, units, description='')
+        self.pointName = pointName
 
+        self.value = None
+        self.group = int(reg_definition.get("Group"))
+        self.variation = int(reg_definition.get("Variation"))
+        self.index = int(reg_definition.get("Index"))
 
-        # if default_value is None:
-        #     self.value = self.reg_type(random.uniform(0, 100))
-        # else:
-        #     try:
-        #         self.value = self.reg_type(default_value)
-        #     except ValueError:
-        #         self.value = self.reg_type()
-
-        self._value = None
+        super().__init__("byte", read_only, pointName, units, description='')
 
     @property
-    def value(self):
-        master_application = self.master_application
-        reg_def = self.reg_def
-        group = int(reg_def.get("Group"))
-        variation = int(reg_def.get("Variation"))
-        index = int(reg_def.get("Index"))
-        value = self._get_outstation_pt(master_application, group, variation, index)
-        # TODO: add logic that only publish valid value
-        return value
+    def value(self) -> RegisterValue:
+        try:
+            value = self._get_outstation_pt(master_application=self.master_application,
+                                            group=self.group,
+                                            variation=self.variation,
+                                            index=self.index)
+            if value is None:
+                _log.warning(f"Register value for pointName {self.pointName} is None.")
+                # raise ValueError(f"Register value for pointName {self.pointName} is None. Hence not publish.")
+                # TODO: figure out an elegant way to not publish None values.
+            return value
+        except Exception as e:
+            _log.error(e)
+            _log.warning("udd_dnp3 driver (master) couldn't get value from the outstation.")
 
     @staticmethod
     def _get_outstation_pt(master_application, group, variation, index) -> RegisterValue:
@@ -98,17 +95,13 @@ class FakeRegister(BaseRegister):
         return return_point_value
 
     @value.setter
-    def value(self, x):
-        value = x
+    def value(self, _val):
         try:
-            reg_def = self.reg_def
-            group = int(reg_def.get("Group"))
-            variation = int(reg_def.get("Variation"))
-            index = int(reg_def.get("Index"))
-
-            val: Optional[RegisterValue]
-            self._set_outstation_pt(self.master_application, group, variation, index, set_value=value)
-
+            self._set_outstation_pt(master_application=self.master_application,
+                                    group=self.group,
+                                    variation=self.variation,
+                                    index=self.index,
+                                    set_value=_val)
         except Exception as e:
             _log.error(e)
             _log.warning("udd_dnp3 driver (master) couldn't set value for the outstation.")
@@ -125,7 +118,7 @@ class FakeRegister(BaseRegister):
                                                      val_to_set=set_value)
 
 
-class Fake434324(BasicRevert, BaseInterface):
+class Dnp3Driver(BasicRevert, BaseInterface):
     # Note: the name of the driver_instance doesn't matter,
     # as long as it inherit from BasicRevert, BaseInterface
 
@@ -150,12 +143,12 @@ class Fake434324(BasicRevert, BaseInterface):
         self.parse_config(registry_config_str)
 
     def get_point(self, point_name):
-        register: FakeRegister = self.get_register_by_name(point_name)
+        register: Dnp3Register = self.get_register_by_name(point_name)
 
         return register.value
 
     def _set_point(self, point_name, value):
-        register: FakeRegister = self.get_register_by_name(point_name)
+        register: Dnp3Register = self.get_register_by_name(point_name)
         if register.read_only:
             raise RuntimeError("Trying to write to a point configured read only: " + point_name)
         # register.value = register.reg_type(value)
@@ -201,7 +194,7 @@ class Fake434324(BasicRevert, BaseInterface):
             type_name = regDef.get("Type", 'string')
             reg_type = type_mapping.get(type_name, str)
 
-            register_type = FakeRegister
+            register_type = Dnp3Register
             register = register_type(read_only,
                                      point_name,
                                      units,
