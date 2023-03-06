@@ -32,6 +32,7 @@ from volttron.driver.base.interfaces import (BaseInterface, BaseRegister, BasicR
 from dnp3_python.dnp3station.master_new import MyMasterNew
 
 from typing import List, Type, Dict, Union, Optional, TypeVar
+from time import sleep
 
 _log = logging.getLogger(__name__)
 type_mapping = {
@@ -52,13 +53,13 @@ class FakeRegister(BaseRegister):
 
     def __init__(self, read_only, pointName, units, reg_type, default_value=None, description='',
                  reg_definition=None, master_application=None):
-        #     register_type, read_only, pointName, units, description = ''):
         # Note: the most important arguments are regDef and master_application
-        # (but keep other arguments by following fake driver example convention)
+        # read_only determine whether the set_point logic can be implemented
+        # (associated with "Writable" field in config-csv)
+        # (Keep other arguments by following fake driver example convention)
         self.reg_def = reg_definition
         self.master_application = master_application
         self.reg_type = reg_type
-        # print(f"======== akeRegister(BaseRegister) read_only {read_only}")
         super(FakeRegister, self).__init__("byte", read_only, pointName, units, description='')
 
 
@@ -83,11 +84,6 @@ class FakeRegister(BaseRegister):
         # TODO: add logic that only publish valid value
         return value
 
-    @value.setter
-    def value(self, x):
-        # TODO: implement this logic
-        self._value = x
-
     @staticmethod
     def _get_outstation_pt(master_application, group, variation, index) -> RegisterValue:
         """
@@ -101,34 +97,32 @@ class FakeRegister(BaseRegister):
                                                                                  index=index)
         return return_point_value
 
+    @value.setter
+    def value(self, x):
+        value = x
+        try:
+            reg_def = self.reg_def
+            group = int(reg_def.get("Group"))
+            variation = int(reg_def.get("Variation"))
+            index = int(reg_def.get("Index"))
 
-# class EKGregister(BaseRegister):
-#
-#     def __init__(self, read_only, pointName, units, reg_type, default_value=None, description=''):
-#         super(EKGregister, self).__init__("byte", read_only, pointName, units, description='')
-#         self._value = 1
-#
-#         math_functions = ('acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'sin',
-#                           'sinh', 'sqrt', 'tan', 'tanh')
-#         if default_value in math_functions:
-#             self.math_func = getattr(math, default_value)
-#         else:
-#             _log.error('Invalid default_value in EKGregister.')
-#             _log.warning('Defaulting to sin(x)')
-#             self.math_func = math.sin
-#
-#     @property
-#     def value(self):
-#         now = datetime.datetime.now()
-#         seconds_in_radians = pi * float(now.second) / 30.0
-#
-#         yval = self.math_func(seconds_in_radians)
-#
-#         return self._value * yval
-#
-#     @value.setter
-#     def value(self, x):
-#         self._value = x
+            val: Optional[RegisterValue]
+            self._set_outstation_pt(self.master_application, group, variation, index, set_value=value)
+
+        except Exception as e:
+            _log.error(e)
+            _log.warning("udd_dnp3 driver (master) couldn't set value for the outstation.")
+
+    @staticmethod
+    def _set_outstation_pt(master_application, group, variation, index, set_value) -> None:
+        """
+        Core logic to send point operate command to outstation
+        Note: using def send_direct_point_command
+        Returns None
+        -------
+        """
+        master_application.send_direct_point_command(group=group, variation=variation, index=index,
+                                                     val_to_set=set_value)
 
 
 class Fake(BasicRevert, BaseInterface):
@@ -154,18 +148,28 @@ class Fake(BasicRevert, BaseInterface):
         self.parse_config(registry_config_str)
 
     def get_point(self, point_name):
-        register = self.get_register_by_name(point_name)
+        register: FakeRegister = self.get_register_by_name(point_name)
 
-        # return register.value  # TODO: revert this back
-        return "somehting for testing"  # TODO: delete this
+        return register.value
 
     def _set_point(self, point_name, value):
-        register = self.get_register_by_name(point_name)
+        register: FakeRegister = self.get_register_by_name(point_name)
         if register.read_only:
             raise RuntimeError("Trying to write to a point configured read only: " + point_name)
-
-        register.value = register.reg_type(value)
-        return register.value
+        # register.value = register.reg_type(value)
+        # register.value = register.set_register_value(value=value)
+        register.value = value
+        # Note: simply retry logic
+        retry_max = 10
+        for n in range(retry_max):
+            if register.value == value:
+                return register.value
+            # register.value = register.set_register_value(value=value)
+            register.value = value
+            sleep(1)
+            # _log.info(f"Starting set_point {n}th RETRY for {point_name}")
+        _log.warning(f"Failed to set_point for {point_name} after {retry_max} retry.")
+        return None
 
     def _scrape_all(self):
         result = {}
@@ -195,9 +199,7 @@ class Fake(BasicRevert, BaseInterface):
             type_name = regDef.get("Type", 'string')
             reg_type = type_mapping.get(type_name, str)
 
-            # register_type = FakeRegister if not point_name.startswith('EKG') else EKGregister
             register_type = FakeRegister
-
             register = register_type(read_only,
                                      point_name,
                                      units,
