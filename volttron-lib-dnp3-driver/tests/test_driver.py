@@ -87,6 +87,23 @@ def test_get_point_set_point(publish_agent):
     assert actual_sampleWriteableShort1 == 42
 
 
+def test_fixture(publish_agent):
+    print(publish_agent)
+    rs = publish_agent.vip.rpc.call(CONFIGURATION_STORE,
+                        "manage_list_stores",
+                        ).get(10)
+    print(f"========== rs {rs}")
+
+    rs = publish_agent.vip.peerlist.list().get(10)
+    print(f"========== rs {rs}")
+
+    rs = publish_agent.vip.rpc.call(CONFIGURATION_STORE,
+                                    "manage_list_configs",
+                                    PLATFORM_DRIVER
+                                    ).get(10)
+    print(f"========== rs {rs}")
+
+
 @pytest.fixture(scope="module")
 def publish_agent(volttron_instance: PlatformWrapper):
     assert volttron_instance.is_running()
@@ -106,14 +123,14 @@ def publish_agent(volttron_instance: PlatformWrapper):
                             start=False,
                             vip_identity=PLATFORM_DRIVER)
     assert puid is not None
-    gevent.sleep(1)
+    gevent.sleep(1)  # TODO use retry logic/flexible sleep
     assert vi.start_agent(puid)
     assert vi.is_agent_running(puid)
 
     # create the publish agent
     publish_agent = volttron_instance.build_agent()
     assert publish_agent.core.identity
-    gevent.sleep(1)
+    gevent.sleep(1)  # TODO use retry logic/flexible sleep
 
     capabilities = {"edit_config_store": {"identity": PLATFORM_DRIVER}}
     volttron_instance.add_capabilities(publish_agent.core.publickey, capabilities)
@@ -126,9 +143,10 @@ def publish_agent(volttron_instance: PlatformWrapper):
     publish_agent.vip.rpc.call(CONFIGURATION_STORE,
                                "manage_store",
                                PLATFORM_DRIVER,
-                               "dnp3.csv",
+                               "fake.csv",
                                registry_config_string,
                                config_type="csv")
+    gevent.sleep(1)  # TODO use retry logic/flexible sleep
 
     driver_config = {
         "driver_config": {},
@@ -145,7 +163,8 @@ def publish_agent(volttron_instance: PlatformWrapper):
                                jsonapi.dumps(driver_config),
                                config_type='json')
 
-    gevent.sleep(10)
+    gevent.sleep(10)  # TODO use retry logic/flexible sleep
+    # TODO add assert to check if config store success.
 
     yield publish_agent
 

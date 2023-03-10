@@ -45,6 +45,10 @@ from volttron.platform.vip.agent import Agent
 from volttron.platform.agent.known_identities import CONFIGURATION_STORE
 from volttron.platform import jsonrpc
 
+from volttron.platform.vip.agent import Agent
+from volttron.platform.agent.known_identities import CONFIGURATION_STORE
+from volttron.platform import jsonrpc
+
 class _config_test_agent(Agent):
     def __init__(self, **kwargs):
         super(_config_test_agent, self).__init__(**kwargs)
