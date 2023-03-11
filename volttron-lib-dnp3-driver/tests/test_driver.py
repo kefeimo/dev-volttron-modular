@@ -103,13 +103,97 @@ def test_fixture(publish_agent):
                                     ).get(10)
     print(f"========== rs {rs}")
 
+import subprocess
+def test_subprocess():
+    cmds = ["vctl", "status"]
+    results = subprocess.run(cmds,
+                             # env=env,
+                             # cwd=cwd,
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE)
+    # print("!!!!!!!!!!!!!!!!")
+    print(f"!!!!!!!!!!!!!!!! results {results}")
 
-@pytest.fixture(scope="module")
-def publish_agent(volttron_instance: PlatformWrapper):
-    assert volttron_instance.is_running()
+    cmds1 = ["vctl", "install", r"/home/kefei/project/dev-volttron-modular/volttron-platform-driver", "--vip-identity", r"platform_driver_20", "--start"]
+    results1 = subprocess.run(cmds1,
+                              # env=env,
+                              # cwd=cwd,
+                              stderr=subprocess.PIPE,
+                              stdout=subprocess.PIPE)
+    # print("!!!!!!!!!!!!!!!!")
+    print(f"!!!!!!!!!!!!!!!! results1 {results1}")
+
+    # cmds2 = ["ls", "/home/kefei"]
+    # results2 = subprocess.run(cmds2,
+    #                          # env=env,
+    #                          # cwd=cwd,
+    #                          stderr=subprocess.PIPE,
+    #                          stdout=subprocess.PIPE)
+    # # print("!!!!!!!!!!!!!!!!")
+    # print(f"!!!!!!!!!!!!!!!! results2 {results2}")
+
+    cmds = ["vctl", "status"]
+    results = subprocess.run(cmds,
+                             # env=env,
+                             # cwd=cwd,
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE)
+    # print("!!!!!!!!!!!!!!!!")
+    print(f"!!!!!!!!!!!!!!!! results {results}")
+
+from volttrontesting.platformwrapper import PlatformWrapper
+from volttron.utils.commands import execute_command
+
+def subprocess_install_agent():
+    cmds = ["vctl", "status"]
+    results = subprocess.run(cmds,
+                             # env=env,
+                             # cwd=cwd,
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE)
+    # print("!!!!!!!!!!!!!!!!")
+    print(f"!!!!!!!!!!!!!!!! results {results}")
+
+    cmds1 = ["vctl", "install", r"/home/kefei/project/dev-volttron-modular/volttron-platform-driver", "--vip-identity",
+             r"platform_driver_20", "--start"]
+    results1 = subprocess.run(cmds1,
+                              # env=env,
+                              # cwd=cwd,
+                              stderr=subprocess.PIPE,
+                              stdout=subprocess.PIPE)
+    # print("!!!!!!!!!!!!!!!!")
+    print(f"!!!!!!!!!!!!!!!! results1 {results1}")
+
+@pytest.mark.line_profile.with_args(PlatformWrapper.install_agent,execute_command, subprocess_install_agent)
+def test_install_platform_driver(volttron_instance):
+    print(volttron_instance)
+
     vi = volttron_instance
-    assert vi is not None
-    assert vi.is_running()
+
+    # install platform driver
+    config = {
+        "driver_scrape_interval": 0.05,
+        "publish_breadth_first_all": "false",
+        "publish_depth_first": "false",
+        "publish_breadth_first": "false"
+    }
+    # puid = vi.install_agent(agent_dir="volttron-platform-driver",
+    #                         config_file=config,
+    #                         start=False,
+    #                         vip_identity=PLATFORM_DRIVER+"2")
+    # assert puid is not None
+    # gevent.sleep(1)  # TODO use retry logic/flexible sleep
+    # # assert vi.start_agent(puid)
+    # # assert vi.is_agent_running(puid)
+    # print(f"=============== puid {puid}")
+    # assert False
+
+    subprocess_install_agent()
+
+def _install_platform_driver(volttron_instance):
+    print(volttron_instance)
+
+    vi = volttron_instance
 
     # install platform driver
     config = {
@@ -121,15 +205,79 @@ def publish_agent(volttron_instance: PlatformWrapper):
     puid = vi.install_agent(agent_dir="volttron-platform-driver",
                             config_file=config,
                             start=False,
-                            vip_identity=PLATFORM_DRIVER)
+                            vip_identity=PLATFORM_DRIVER+"2")
     assert puid is not None
     gevent.sleep(1)  # TODO use retry logic/flexible sleep
-    assert vi.start_agent(puid)
-    assert vi.is_agent_running(puid)
+    # assert vi.start_agent(puid)
+    # assert vi.is_agent_running(puid)
+    print(f"=============== puid {puid}")
+    # assert False
 
+    # subprocess_install_agent()
+
+
+@pytest.mark.line_profile.with_args(_install_platform_driver,
+                                    PlatformWrapper.install_agent,execute_command, subprocess_install_agent)
+def test_install_platform_driver_benchmark(volttron_instance):
+    _install_platform_driver(volttron_instance)
+
+
+
+# def test_non_fixture(volttron_instance: PlatformWrapper):
+#     # init volttron instance using fixture
+#     print(f"=============== # init volttron instance using fixture")
+#     assert volttron_instance.is_running()
+#     vi = volttron_instance
+#     assert vi is not None
+#     assert vi.is_running()
+
+
+# from volttrontesting.fixtures.volttron_platform_fixtures import volttron_instance, volttron_instance_dummy
+# @pytest.fixture(scope="module")
+# volttron_instance_dummy
+
+def for_porfiling():
+    print("===========almost nothing here")
+
+@pytest.mark.line_profile.with_args(for_porfiling,)
+def test_line_profile():
+    print("==================Yes")
+
+
+@pytest.fixture(scope="module")
+# def publish_agent(volttron_instance: PlatformWrapper):
+def publish_agent(volttron_instance_dummy: PlatformWrapper):
+    # init volttron instance using fixture
+    print(f"=============== # init volttron instance using fixture")
+    assert volttron_instance_dummy.is_running()
+    volttron_instance = volttron_instance_dummy
+    assert volttron_instance is not None
+    assert volttron_instance.is_running()
+
+    print(f"=============== vi {volttron_instance}")
+
+
+    # # install platform driver
+    # config = {
+    #     "driver_scrape_interval": 0.05,
+    #     "publish_breadth_first_all": "false",
+    #     "publish_depth_first": "false",
+    #     "publish_breadth_first": "false"
+    # }
+    # puid = vi.install_agent(agent_dir="volttron-platform-driver",
+    #                         config_file=config,
+    #                         start=False,
+    #                         vip_identity=PLATFORM_DRIVER)
+    # assert puid is not None
+    # gevent.sleep(1)  # TODO use retry logic/flexible sleep
+    # assert vi.start_agent(puid)
+    # assert vi.is_agent_running(puid)
+    # print(f"=============== puid {puid}")
+    #
     # create the publish agent
     publish_agent = volttron_instance.build_agent()
     assert publish_agent.core.identity
+    print(f"=============== publish_agent.core.identity {publish_agent.core.identity}")
     gevent.sleep(1)  # TODO use retry logic/flexible sleep
 
     capabilities = {"edit_config_store": {"identity": PLATFORM_DRIVER}}
@@ -162,11 +310,12 @@ def publish_agent(volttron_instance: PlatformWrapper):
                                "devices/fake",
                                jsonapi.dumps(driver_config),
                                config_type='json')
-
-    gevent.sleep(10)  # TODO use retry logic/flexible sleep
-    # TODO add assert to check if config store success.
+    #
+    # gevent.sleep(10)  # TODO use retry logic/flexible sleep
+    # # TODO add assert to check if config store success.
 
     yield publish_agent
+    # yield volttron_instance
 
-    volttron_instance.stop_agent(puid)
+    # volttron_instance.stop_agent(puid)
     publish_agent.core.stop()
