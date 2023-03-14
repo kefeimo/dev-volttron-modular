@@ -1,18 +1,24 @@
 # volttron-lib-dnp3-driver
 
-![Passing?](https://github.com/VOLTTRON/volttron-lib-dnp3-driver/actions/workflows/run-tests.yml/badge.svg)
-[![pypi version](https://img.shields.io/pypi/v/volttron-lib-dnp3-driver.svg)](https://pypi.org/project/volttron-lib-dnp3-driver/)
+[//]: # (TODO: dispaly badges)
 
-The FakeDriver is a way to quickly see data published to the message bus in a format that mimics what a true Driver would produce. This is an extremely simple implementation of the [VOLTTRON driver framework](https://volttron.readthedocs.io/en/develop/agent-framework/driver-framework/drivers-overview.html#driver-framework). This driver does not connect to any actual device and instead produces random and or pre-configured values.
+[//]: # (![Passing?]&#40;https://github.com/VOLTTRON/volttron-lib-dnp3-driver/actions/workflows/run-tests.yml/badge.svg&#41;)
+
+[//]: # ([![pypi version]&#40;https://img.shields.io/pypi/v/volttron-lib-dnp3-driver.svg&#41;]&#40;https://pypi.org/project/volttron-lib-dnp3-driver/&#41;)
+
+The FakeDriver is a way to quickly see data published to the message bus in a format that mimics what a true Driver
+would produce. This is an extremely simple implementation of
+the [VOLTTRON driver framework](https://volttron.readthedocs.io/en/develop/agent-framework/driver-framework/drivers-overview.html#driver-framework).
+This driver does not connect to any actual device and instead produces random and or pre-configured values.
 
 # Prerequisites
 
-* Python 3.8
+* Python 3 (tested with Python3.8, Python3.9, Python3.10)
 
 ## Python
 
 <details>
-<summary>To install Python 3.8, we recommend using <a href="https://github.com/pyenv/pyenv"><code>pyenv</code></a>.</summary>
+<summary>To install specific Python version (e.g., Python 3.8), we recommend using <a href="https://github.com/pyenv/pyenv"><code>pyenv</code></a>.</summary>
 
 ```bash
 # install pyenv
@@ -29,6 +35,7 @@ pyenv install 3.8.10
 # make it available globally
 pyenv global system 3.8.10
 ```
+
 </details>
 
 # Installation
@@ -40,7 +47,19 @@ python -m venv env
 source env/bin/activate
 ```
 
-2. Install volttron and start the platform.
+1. Install volttron and start the platform.
+
+> **Note**:
+> According to [volttron-core#readme](https://github.com/eclipse-volttron/volttron-core#readme), setup VOLTTRON_HOME
+> environment variable is mandatory:
+
+```shell
+export VOLTTRON_HOME=/path/to/volttron_home/dir
+```
+
+> ... if you have/had in the past, a monolithic VOLTTRON version that used the default VOLTTRON_HOME
+> $HOME/.volttron. This modular version of VOLTTRON cannot work with volttron_home used by monolithic version of VOLTTRON(
+> version 8.3 or earlier)
 
 ```shell
 pip install volttron
@@ -57,7 +76,7 @@ vctl install volttron-platform-driver --vip-identity platform.driver --start
 
 4. Install the volttron fake driver library.
 
- You have two options. You can install this library using the version on PyPi:
+You have two options. You can install this library using the version on PyPi:
 
 ```shell
 pip install volttron-lib-fake-driver
@@ -65,7 +84,8 @@ pip install volttron-lib-fake-driver
 
 5. Install a Fake Driver onto the Platform Driver.
 
-Installing a Fake driver in the Platform Driver Agent requires adding copies of the device configuration and registry configuration files to the Platform Driver’s configuration store
+Installing a Fake driver in the Platform Driver Agent requires adding copies of the device configuration and registry
+configuration files to the Platform Driver’s configuration store
 
 Create a config directory and navigate to it:
 
@@ -78,16 +98,16 @@ Navigate to the config directory and create a file called `fake.config` and add 
 
 ```json
 {
-    "driver_config": {},
-    "registry_config": "config://fake.csv",
-    "interval": 5,
-    "timezone": "US/Pacific",
-    "heart_beat_point": "Heartbeat",
-    "driver_type": "fake",
-    "publish_breadth_first_all": false,
-    "publish_depth_first": false,
-    "publish_breadth_first": false
-    }
+  "driver_config": {},
+  "registry_config": "config://fake.csv",
+  "interval": 5,
+  "timezone": "US/Pacific",
+  "heart_beat_point": "Heartbeat",
+  "driver_type": "fake",
+  "publish_breadth_first_all": false,
+  "publish_depth_first": false,
+  "publish_breadth_first": false
+}
 ```
 
 Create another file called `fake.csv` and add the following contents to it:
@@ -144,15 +164,16 @@ tail -f <path to folder containing volttron.log>/volttron.log
 
 # Development
 
-Please see the following for contributing guidelines [contributing](https://github.com/eclipse-volttron/volttron-core/blob/develop/CONTRIBUTING.md).
+Please see the following for contributing
+guidelines [contributing](https://github.com/eclipse-volttron/volttron-core/blob/develop/CONTRIBUTING.md).
 
-Please see the following helpful guide about [developing modular VOLTTRON agents](https://github.com/eclipse-volttron/volttron-core/blob/develop/DEVELOPING_ON_MODULAR.md)
-
+Please see the following helpful guide
+about [developing modular VOLTTRON agents](https://github.com/eclipse-volttron/volttron-core/blob/develop/DEVELOPING_ON_MODULAR.md)
 
 # Disclaimer Notice
 
 This material was prepared as an account of work sponsored by an agency of the
-United States Government.  Neither the United States Government nor the United
+United States Government. Neither the United States Government nor the United
 States Department of Energy, nor Battelle, nor any of their employees, nor any
 jurisdiction or organization that has cooperated in the development of these
 materials, makes any warranty, express or implied, or assumes any legal
