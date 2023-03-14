@@ -319,8 +319,9 @@ pyenv global system 3.8.10
    **Install the [Listener Agent](https://pypi.org/project/volttron-listener/)**:
    Run `vctl install volttron-listener --start`. Once installed, you should see the data being published by viewing the
    Volttron logs file. (i.e., `tail -f <path to folder containing volttron.log>/volttron.log`)
-   (Note: it is recommended to restart the platform agent after a specific driver is installed and configured. i.e.,
-   using the `vctl restart <agent-uuid>` command.) The expected logging will be similar as follows
+   > **Note**:
+   > it is recommended to restart the Platform Driver after a specific driver is installed and configured. i.e.,
+   > using the `vctl restart <agent-uuid>` command.) The expected logging will be similar as follows:
 
     ```bash
     2023-03-14 00:11:55,000 (volttron-platform-driver-0.2.0rc0 24737) volttron.driver.base.driver(277) DEBUG: scraping device: campus/building/dnp3
