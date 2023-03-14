@@ -262,6 +262,38 @@ work out-of-the-box. Please feel free to refer to related documentations for det
    More details about the "dnp3demo" module, plesae
    see [dnp3demo-Module.md](https://github.com/VOLTTRON/dnp3-python/blob/main/docs/dnp3demo-Module.md))
 
+   ```shell
+    ==== Outstation Operation MENU ==================================
+    <ai> - update analog-input point value (for local reading)
+    <ao> - update analog-output point value (for local control)
+    <bi> - update binary-input point value (for local reading)
+    <bo> - update binary-output point value (for local control)
+    <dd> - display database
+    <dc> - display configuration
+    =================================================================
+   
+    ======== Your Input Here: ==(outstation)======
+    ai
+    You chose <ai> - update analog-input point value (for local reading)
+    Type in <float> and <index>. Separate with space, then hit ENTER.
+    Type 'q', 'quit', 'exit' to main menu.
+    
+    
+    ======== Your Input Here: ==(outstation)======
+    0.1212 0
+    {'Analog': {0: 0.1212, 1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None}}
+    You chose <ai> - update analog-input point value (for local reading)
+    Type in <float> and <index>. Separate with space, then hit ENTER.
+    Type 'q', 'quit', 'exit' to main menu.
+    
+    
+    ======== Your Input Here: ==(outstation)======
+    1.2323 1
+    {'Analog': {0: 0.1212, 1: 1.2323, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None}}
+    You chose <ai> - update analog-input point value (for local reading)
+    Type in <float> and <index>. Separate with space, then hit ENTER.
+    Type 'q', 'quit', 'exit' to main menu.
+   ```
     <details>
     <summary>Example of interaction with the `dnp3demo outstation` sub-command</summary>
 
