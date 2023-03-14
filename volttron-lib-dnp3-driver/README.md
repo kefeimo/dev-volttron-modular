@@ -50,8 +50,8 @@ pyenv global system 3.8.10
 
 1. Create and activate a virtual environment.
 
-    It is recommended to use a virtual environment for installing volttron.
-    
+   It is recommended to use a virtual environment for installing volttron.
+
     ```shell
     python -m venv env
     source env/bin/activate
@@ -61,13 +61,13 @@ pyenv global system 3.8.10
 
 1. Install volttron and start the platform.
 
-    > **Note**:
-    > According to [volttron-core#readme](https://github.com/eclipse-volttron/volttron-core#readme), setup VOLTTRON_HOME
-    > environment variable is mandatory:
-    
-    > ... if you have/had in the past, a monolithic VOLTTRON version that used the default VOLTTRON_HOME
-    > $HOME/.volttron. This modular version of VOLTTRON cannot work with volttron_home used by monolithic version of
-    > VOLTTRON(version 8.3 or earlier)
+   > **Note**:
+   > According to [volttron-core#readme](https://github.com/eclipse-volttron/volttron-core#readme), setup VOLTTRON_HOME
+   > environment variable is mandatory:
+
+   > ... if you have/had in the past, a monolithic VOLTTRON version that used the default VOLTTRON_HOME
+   > $HOME/.volttron. This modular version of VOLTTRON cannot work with volttron_home used by monolithic version of
+   > VOLTTRON(version 8.3 or earlier)
 
     ```shell
     # Setup enviornment variable
@@ -79,15 +79,15 @@ pyenv global system 3.8.10
 
 1. Install the volttron platform driver:
 
-    Install platform driver with `vip-identity==platform_driver_for_dnp3`.
-    
+   Install platform driver with `vip-identity==platform_driver_for_dnp3`.
+
     ```shell
     vctl install volttron-platform-driver --vip-identity platform_driver_for_dnp3 --start
     ```
-    
+
     <details>
     <summary>Verify with `vctl status`.</summary>
-    
+
     ```bash
     (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ vctl status
     
@@ -95,14 +95,14 @@ pyenv global system 3.8.10
     
     5      volttron-platform-driver-0.2.0rc1 platform_driver_for_dnp3                  running [23217] GOOD
     ```
-    
+
     </details>
 
 1. Install the "volttron-lib-dnp3-driver" library.
 
-    You have two options. You can install this library using the version on PyPi or install it from the source
-    code (`git clone` might be required.)
-    
+   You have two options. You can install this library using the version on PyPi or install it from the source
+   code (`git clone` might be required.)
+
     ```shell
     # option 1: install from pypi
     pip install volttron-lib-dnp3-driver
@@ -113,20 +113,21 @@ pyenv global system 3.8.10
 
 1. Install a DNP3 Driver onto the Platform Driver.
 
-    Installing a DNP3 driver in the Platform Driver Agent requires adding copies of the device configuration and registry
-    configuration files to the Platform Driver’s configuration store. For demo purpose, we will use default configure files.
-    
-    Prepare config files:
-    
+   Installing a DNP3 driver in the Platform Driver Agent requires adding copies of the device configuration and registry
+   configuration files to the Platform Driver’s configuration store. For demo purpose, we will use default configure
+   files.
+
+   Prepare config files:
+
     ```shell
     # Create config file place holders
     mkdir config
     touch config/dnp3-config.json
     touch config/dnp3.csv
     ```
-    
-    Edit the `dnp3-config.json` as follows:
-    
+
+   Edit the `dnp3-config.json` as follows:
+
     ```json
     {
       "driver_config": {
@@ -144,9 +145,9 @@ pyenv global system 3.8.10
       "heart_beat_point": "random_bool"
     }
     ```
-    
-    Edit the `dnp3.csv` as follows:
-    
+
+   Edit the `dnp3.csv` as follows:
+
     ```csv
     Point Name,Volttron Point Name,Group,Variation,Index,Scaling,Units,Writable,Notes
     AnalogInput_index0,AnalogInput_index0,30,6,0,1,NA,FALSE,Double Analogue input without status
@@ -167,18 +168,18 @@ pyenv global system 3.8.10
     BinaryOutput_index3,BinaryOutput_index3,10,2,3,1,NA,TRUE,Binary Output with flags
     
     ```
-    
-    Add config to the configuration store:
-    
+
+   Add config to the configuration store:
+
     ```
     vctl config store platform_driver_for_dnp3 devices/campus/building/dnp3 config/dnp3-config.json
     vctl config store platform_driver_for_dnp3 dnp3.csv config/dnp3.csv --csv
     ```
-    
+
     <details>
     <summary>Verify with `vctl config list` and `vctl config get` command. 
     (Please refer to the `vctl config` documentation for more details.)</summary>
-    
+
     ```bash
     (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ vctl config get platform_driver_for_dnp3 devices/campus/building/dnp3
     {
@@ -208,20 +209,20 @@ pyenv global system 3.8.10
     ...
     ]
     ```
-    
+
     </details>
 
-1. Verify with Logging Data
+1. Verify with logging data
 
-    When the DNP3-Driver is properly installed and configured, we can verify with logging data in "volttron.log".
-    
+   When the DNP3-Driver is properly installed and configured, we can verify with logging data in "volttron.log".
+
     ```
     tail -f <path to folder containing volttron.log>/volttron.log
     ```
-    
+
     <details>
     <summary>Expected logging example</summary>
-    
+
     ```bash
     ...
     2023-03-13 23:26:56,611 (volttron-platform-driver-0.2.0rc1 23666) volttron.driver.base.driver(334) DEBUG: finish publishing: devices/campus/building/dnp3/all
@@ -240,23 +241,27 @@ pyenv global system 3.8.10
     2023-03-13 23:26:59,905 () volttron.services.auth.auth_service(239) DEBUG: Sending auth update to peers platform_driver_for_dnp3...
     ]
     ```
+    </details>
 
-1. (Optional) Verify with Published Data Polled From Outstation
+1. (Optional) Verify with published data polled from outstation
 
-    To see data being polled from an outstation and published to the bus, we need to
-    
-    * Start an outstation, and
-      * install a [Listener Agent](https://pypi.org/project/volttron-listener/):
-    
-    The [dnp3-python](https://github.com/VOLTTRON/dnp3-python) is part of the dnp3-driver dependency and is immediately
-    available after the DNP3-Driver is installed.
-    **Open another terminal**, and run `dnp3demo outstation`. For demo purpose, we assign arbitrary values to the point. (
-    More details about the "dnp3demo" module, plesae
-    see [dnp3demo-Module.md](https://github.com/VOLTTRON/dnp3-python/blob/main/docs/dnp3demo-Module.md))
-    
+   To see data being polled from an outstation and published to the bus, we need to
+
+    * Set up an outstation, and
+    * install a [Listener Agent](https://pypi.org/project/volttron-listener/):
+
+   **Set up an outstation**: The [dnp3-python](https://github.com/VOLTTRON/dnp3-python) is part of the dnp3-driver
+   dependency and is immediately
+   available after the DNP3-Driver is installed.
+
+   **Open another terminal**, and run `dnp3demo outstation`. For demo purpose, we assign arbitrary values to the
+   point. (
+   More details about the "dnp3demo" module, plesae
+   see [dnp3demo-Module.md](https://github.com/VOLTTRON/dnp3-python/blob/main/docs/dnp3demo-Module.md))
+
     <details>
     <summary>Example of interaction with the `dnp3demo outstation` sub-command</summary>
-    
+
     ```bash
     (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ dnp3demo outstation
     dnp3demo.run_outstation {'command': 'outstation', 'outstation_ip=': '0.0.0.0', 'port=': 20000, 'master_id=': 2, 'outstation_id=': 1}
@@ -309,14 +314,14 @@ pyenv global system 3.8.10
     
     ======== Your Input Here: ==(outstation)======
     ```
-    
-    Install the [Listener Agent](https://pypi.org/project/volttron-listener/) with `vctl install volttron-listener --start`.
-    
-    Once installed, you should see the data being published by viewing the Volttron logs file. (
-    i.e., `tail -f <path to folder containing volttron.log>/volttron.log`)
-    (Note: it is recommended to restart the platform agent after a specific driver is installed and configured. i.e.,
-    using the `vctl restart <agent-uuid>` command.) The expected logging will be similar as follows
-    
+    </details>
+
+   **Install the [Listener Agent](https://pypi.org/project/volttron-listener/)**:
+   Run `vctl install volttron-listener --start`. Once installed, you should see the data being published by viewing the
+   Volttron logs file. (i.e., `tail -f <path to folder containing volttron.log>/volttron.log`)
+   (Note: it is recommended to restart the platform agent after a specific driver is installed and configured. i.e.,
+   using the `vctl restart <agent-uuid>` command.) The expected logging will be similar as follows
+
     ```bash
     2023-03-14 00:11:55,000 (volttron-platform-driver-0.2.0rc0 24737) volttron.driver.base.driver(277) DEBUG: scraping device: campus/building/dnp3
     2023-03-14 00:11:55,805 (volttron-platform-driver-0.2.0rc0 24737) volttron.driver.base.driver(330) DEBUG: publishing: devices/campus/building/dnp3/all
