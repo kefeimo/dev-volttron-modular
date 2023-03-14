@@ -259,7 +259,7 @@ work out-of-the-box. Please feel free to refer to related documentations for det
 
    **Open another terminal**, and run `dnp3demo outstation`. For demo purpose, we assign arbitrary values to the
    point. (
-   More details about the "dnp3demo" module, plesae
+   More details about the "dnp3demo" module, please
    see [dnp3demo-Module.md](https://github.com/VOLTTRON/dnp3-python/blob/main/docs/dnp3demo-Module.md))
 
    ```shell
