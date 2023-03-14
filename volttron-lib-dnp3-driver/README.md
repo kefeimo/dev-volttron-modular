@@ -17,7 +17,7 @@ the [VOLTTRON driver framework](https://volttron.readthedocs.io/en/develop/agent
 Note that the DNP3-Driver requires a DNP3 outstation instance to properly function. e.g., polling data, setting point
 values, etc. does not connect to any actual device and instead produces random and or pre-configured values.
 The [dnp3-python](https://github.com/VOLTTRON/dnp3-python) can provide the essential outstation functionality, and as
-part of the DNP3-Driver dependency and is immediately available after the DNP3-Driver is installed.
+part of the DNP3-Driver dependency, and it is immediately available after the DNP3-Driver is installed.
 
 # Prerequisites
 
@@ -46,7 +46,10 @@ pyenv global system 3.8.10
 
 </details>
 
-# Installation
+# Quick Start
+
+The following recipe walks through the steps to install and configure a DNP3 Driver. Note that it uses default setup to
+work out-of-the-box. Please feel free to refer to related documentations for details.
 
 1. Create and activate a virtual environment.
 
@@ -79,7 +82,8 @@ pyenv global system 3.8.10
 
 1. Install the volttron platform driver:
 
-   Install platform driver with `vip-identity==platform_driver_for_dnp3`.
+   Note: for reproducibility, this demo will install platform driver with `vip-identity==platform_driver_for_dnp3`.
+   Free feel to specify any agent vip-identity as desired.
 
     ```shell
     vctl install volttron-platform-driver --vip-identity platform_driver_for_dnp3 --start
@@ -100,8 +104,8 @@ pyenv global system 3.8.10
 
 1. Install the "volttron-lib-dnp3-driver" library.
 
-   You have two options. You can install this library using the version on PyPi or install it from the source
-   code (`git clone` might be required.)
+   There are two options to install the DNP3 Driver. You can install this library using the version on PyPi or install
+   it from the source code (`git clone` might be required.)
 
     ```shell
     # option 1: install from pypi
@@ -117,7 +121,7 @@ pyenv global system 3.8.10
    configuration files to the Platform Driver’s configuration store. For demo purpose, we will use default configure
    files.
 
-   Prepare config files:
+   Prepare the default config files:
 
     ```shell
     # Create config file place holders
@@ -251,8 +255,7 @@ pyenv global system 3.8.10
     * install a [Listener Agent](https://pypi.org/project/volttron-listener/):
 
    **Set up an outstation**: The [dnp3-python](https://github.com/VOLTTRON/dnp3-python) is part of the dnp3-driver
-   dependency and is immediately
-   available after the DNP3-Driver is installed.
+   dependency, and it is immediately available after the DNP3-Driver is installed.
 
    **Open another terminal**, and run `dnp3demo outstation`. For demo purpose, we assign arbitrary values to the
    point. (
