@@ -28,7 +28,7 @@ part of the DNP3-Driver dependency, and it is immediately available after the DN
 <details>
 <summary>To install specific Python version (e.g., Python 3.8), we recommend using <a href="https://github.com/pyenv/pyenv"><code>pyenv</code></a>.</summary>
 
-```bash
+```shell
 # install pyenv
 git clone https://github.com/pyenv/pyenv ~/.pyenv
 
@@ -92,7 +92,7 @@ work out-of-the-box. Please feel free to refer to related documentations for det
     <details>
     <summary>Verify with `vctl status`.</summary>
 
-    ```bash
+    ```shell
     (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ vctl status
     
     UUID   AGENT                             IDENTITY                     TAG PRIORITY STATUS          HEALTH                                   
@@ -184,7 +184,7 @@ work out-of-the-box. Please feel free to refer to related documentations for det
     <summary>Verify with `vctl config list` and `vctl config get` command. 
     (Please refer to the `vctl config` documentation for more details.)</summary>
 
-    ```bash
+    ```shell
     (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ vctl config get platform_driver_for_dnp3 devices/campus/building/dnp3
     {
       "driver_config": {
@@ -227,7 +227,7 @@ work out-of-the-box. Please feel free to refer to related documentations for det
     <details>
     <summary>Expected logging example</summary>
 
-    ```bash
+    ```shell
     ...
     2023-03-13 23:26:56,611 (volttron-platform-driver-0.2.0rc1 23666) volttron.driver.base.driver(334) DEBUG: finish publishing: devices/campus/building/dnp3/all
     2023-03-13 23:26:57,897 () volttron.services.auth.auth_service(235) DEBUG: after getting peerlist to send auth updates
@@ -265,7 +265,7 @@ work out-of-the-box. Please feel free to refer to related documentations for det
     <details>
     <summary>Example of interaction with the `dnp3demo outstation` sub-command</summary>
 
-    ```bash
+    ```shell
     (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ dnp3demo outstation
     dnp3demo.run_outstation {'command': 'outstation', 'outstation_ip=': '0.0.0.0', 'port=': 20000, 'master_id=': 2, 'outstation_id=': 1}
     ms(1678770551216) INFO    manager - Starting thread (0)
@@ -326,7 +326,7 @@ work out-of-the-box. Please feel free to refer to related documentations for det
    > it is recommended to restart the Platform Driver after a specific driver is installed and configured. i.e.,
    > using the `vctl restart <agent-uuid>` command.) The expected logging will be similar as follows:
 
-    ```bash
+    ```shell
     2023-03-14 00:11:55,000 (volttron-platform-driver-0.2.0rc0 24737) volttron.driver.base.driver(277) DEBUG: scraping device: campus/building/dnp3
     2023-03-14 00:11:55,805 (volttron-platform-driver-0.2.0rc0 24737) volttron.driver.base.driver(330) DEBUG: publishing: devices/campus/building/dnp3/all
     2023-03-14 00:11:55,810 (volttron-listener-0.2.0rc0 24424) listener.agent(104) INFO: Peer: pubsub, Sender: platform_driver_for_dnp3:, Bus: , Topic: devices/campus/building/dnp3/all, Headers: {'Date': '2023-03-14T05:11:55.805245+00:00', 'TimeStamp': '2023-03-14T05:11:55.805245+00:00', 'SynchronizedTimeStamp': '2023-03-14T05:11:55.000000+00:00', 'min_compatible_version': '3.0', 'max_compatible_version': ''}, Message: 
