@@ -1,18 +1,22 @@
 # volttron-lib-dnp3-driver
 
-[//]: # TODO: get the badges
+[//]: # (TODO: get the badges)
 
-Distributed Network Protocol (DNP or DNP3) has achieved a large-scale acceptance since its introduction in 1993. This
+Distributed Network Protocol (DNP
+or [DNP3](https://en.wikipedia.org/wiki/DNP3))
+has achieved a large-scale acceptance since its introduction in 1993. This
 protocol is an immediately deployable solution for monitoring remote sites because it was developed for communication of
 critical infrastructure status, allowing for reliable remote control.
 
-The DNP3-Driver is a wrapper on the DNP3 master following
+DNP3 is typically used between centrally located masters and distributed remotes. The master provides the interface
+between the human network manager and the monitoring system. The remote (RTUs and intelligent electronic devices)
+provides the interface between the master and the physical device(s) being monitored and/or controlled. The DNP3-Driver
+is a wrapper on the DNP3 master following
 the [VOLTTRON driver framework](https://volttron.readthedocs.io/en/develop/agent-framework/driver-framework/drivers-overview.html#driver-framework).
-Note that the dnp3-driver requires a dnp3 outstation instance to properly function. e.g., polling data, setting point
+Note that the DNP3-Driver requires a DNP3 outstation instance to properly function. e.g., polling data, setting point
 values, etc. does not connect to any actual device and instead produces random and or pre-configured values.
 The [dnp3-python](https://github.com/VOLTTRON/dnp3-python) can provide the essential outstation functionality, and as
-part of the dnp3-driver dependency and is immediately
-available after the dnp3-driver is installed.
+part of the DNP3-Driver dependency and is immediately available after the DNP3-Driver is installed.
 
 # Prerequisites
 
@@ -95,7 +99,7 @@ UUID   AGENT                             IDENTITY                     TAG PRIORI
 
 </details>
 
-1. Install the volttron dnp3 driver library.
+1. Install the "volttron-lib-dnp3-driver" library.
 
 You have two options. You can install this library using the version on PyPi or install it from the source
 code (`git clone` might be required.)
@@ -210,7 +214,7 @@ vctl config store platform_driver_for_dnp3 dnp3.csv config/dnp3.csv --csv
 
 1. Verify with Logging Data
 
-When the dnp3 driver is properly installed and configured, we can verify with logging data in "volttron.log".
+When the DNP3-Driver is properly installed and configured, we can verify with logging data in "volttron.log".
 
 ```
 tail -f <path to folder containing volttron.log>/volttron.log
@@ -246,7 +250,7 @@ To see data being polled from an outstation and published to the bus, we need to
 * install a [Listener Agent](https://pypi.org/project/volttron-listener/):
 
 The [dnp3-python](https://github.com/VOLTTRON/dnp3-python) is part of the dnp3-driver dependency and is immediately
-available after the dnp3-driver is installed.
+available after the DNP3-Driver is installed.
 **Open another terminal**, and run `dnp3demo outstation`. For demo purpose, we assign arbitrary values to the point. (
 More details about the "dnp3demo" module, plesae
 see [dnp3demo-Module.md](https://github.com/VOLTTRON/dnp3-python/blob/main/docs/dnp3demo-Module.md))
