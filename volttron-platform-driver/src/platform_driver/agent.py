@@ -413,6 +413,8 @@ class PlatformDriverAgent(Agent):
         self._name_map[topic.lower()] = topic
         self._update_override_state(topic, 'add')
 
+
+
     def remove_driver(self, config_name, action, contents):
         topic = self.derive_device_topic(config_name)
         self.stop_driver(topic)

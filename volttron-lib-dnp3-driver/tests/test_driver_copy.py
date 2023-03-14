@@ -30,8 +30,6 @@ import pytest
 from volttron.client.known_identities import CONFIGURATION_STORE, PLATFORM_DRIVER
 from volttron.utils import jsonapi
 from volttrontesting.platformwrapper import PlatformWrapper
-import sys
-import time
 
 
 def test_scrape_all(publish_agent):
@@ -218,86 +216,19 @@ def _install_platform_driver(volttron_instance):
 
     # subprocess_install_agent()
 
-from volttron.client.vip.agent import build_agent
-def test_peer_list():
-    # volttron_home = r"/tmp/tmpsomething/volttron_home"
-    # print(volttron_home)
-    # os.environ["VOLTTRON_HOME"] = volttron_home
-    a = build_agent()
-    rs = a.vip.peerlist.list().get(10)
-    print(f"========== rs {rs}")
-
-
 def test_subprocess():
-    # volttron_home = str(volttron_instance)
-    # volttron_home = r"/tmp/tmpsomething/volttron_home"
-    # print(volttron_home)
-    # os.environ["VOLTTRON_HOME"] = volttron_home
+    os.environ["VOLTTRON_HOME"] = r"tmp/tempsomething/volttron_home"
     print(os.environ["VOLTTRON_HOME"])
-
-    # check peer
-    a = build_agent()
-    rs = a.vip.peerlist.list().get(10)
-    print(f"========== rs a.vip.peerlist.list().get(10) 1st {rs}")
-
-    # install/run platform driver agent
-    config_path = r"/home/kefei/project/dev-volttron-modular/volttron/examples/ListenerAgent/config"
-    # os.environ["AGENT_CONFIG"] = config_path
-    # print(os.environ["AGENT_CONFIG"])
-    my_env = os.environ.copy()
-    my_env["AGENT_CONFIG"] = config_path
-    # my_env["AGENT_VIP_IDENTITY"] = "platform_driver_2"
-    # my_env["VOLTTRON_HOME"] = os.environ["VOLTTRON_HOME"]
-    cmd_string = "/home/kefei/project/dev-volttron-modular/env/bin/python " \
-                 "/home/kefei/project/dev-volttron-modular/volttron/scripts/launch-agent.py " \
-                 "/home/kefei/project/dev-volttron-modular/volttron-platform-driver/src/platform_driver/agent.py"
-    cmd = [sys.executable] + [rf"{c}" for c in cmd_string.split(" ")][1:]
-    # cmd_string = "vctl install /home/kefei/project/dev-volttron-modular/volttron-platform-driver " \
-    #              "--vip-identity platform_driver_100 --start"
-    cmd = ["vctl", "install", r"/home/kefei/project/dev-volttron-modular/volttron-platform-driver", "--vip-identity",
-           r"platform_driver_100", "--start"]
-    # cmd = ["vctl", "status"]
-    print(cmd)
-    try:
-        process = subprocess.Popen(cmd,
-                                # text=True, check=True,
-                                stderr=subprocess.PIPE,
-                                stdout=subprocess.PIPE,
-                                env=my_env,
-                                # timeout=10,
-                                 text=True,
-                                 shell=True
-                                )
-        time.sleep(10)
-        std_out, std_err = process.communicate()
-        # std_out.strip(), std_err
-        print(f"==========std_out, {std_out}")
-        print(f"==========std_err, {std_err}")
-    except Exception as e:
-        print(e)
-
-    # verify
-    # a = build_agent()
-    rs = a.vip.peerlist.list().get(10)
-    print(f"========== rs a.vip.peerlist.list().get(10) 2nd {rs}")
-
-
-@pytest.fixture(scope="module")
-def volttron_instance_dummy():
-    os.environ["VOLTTRON_HOME"] = r"/tmp/tmpsomething/volttron_home"
-    print(os.environ["VOLTTRON_HOME"])
-    cmd_string = "/home/kefei/project/dev-volttron-modular/env/bin/python /home/kefei/project/dev-volttron-modular/env/bin/volttron -v"
-    # cmd_string = "vctl status"
-    cmd = [sys.executable] + [rf"{c}" for c in cmd_string.split(" ")][1:]
+    cmd_string = "echo $VOLTTRON_HOME"
+    cmd_string = "ls /home/kefei"
+    cmd = [rf"{c}" for c in cmd_string.split(" ")]
     print(cmd)
     result = subprocess.run(cmd,
                             # text=True, check=True,
                             stderr=subprocess.PIPE,
                             stdout=subprocess.PIPE
                             )
-    gevent.sleep(1)
     print(f"==========result, {result}")
-
 
 @pytest.mark.line_profile.with_args(_install_platform_driver,
                                     PlatformWrapper.install_agent,execute_command, subprocess_install_agent)
@@ -328,8 +259,8 @@ def test_line_profile():
 
 
 @pytest.fixture(scope="module")
-def publish_agent(volttron_instance: PlatformWrapper):
-# def publish_agent(volttron_instance_dummy: PlatformWrapper):
+# def publish_agent(volttron_instance: PlatformWrapper):
+def publish_agent(volttron_instance_dummy: PlatformWrapper):
     # init volttron instance using fixture
     print(f"=============== # init volttron instance using fixture")
     assert volttron_instance_dummy.is_running()

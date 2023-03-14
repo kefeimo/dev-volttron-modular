@@ -27,17 +27,18 @@ def main():
     a = build_agent()
     print(a)
 
-    peer = "platform_driver"
+    peer = "platform_driver_for_dnp3"
+    device_name = "campus/building/dnp3"
 
     # get_point example
     peer_method = "get_point"
-    rs = a.vip.rpc.call(peer, peer_method, "campus-vm/building-vm/dnp3", "AnalogInput_index0").get(timeout=10)
+    rs = a.vip.rpc.call(peer, peer_method, device_name, "AnalogInput_index0").get(timeout=10)
     print(f"========== rs {rs}")
 
     # set_point example
     peer_method = "set_point"
     val = 4.6567
-    rs = a.vip.rpc.call(peer, peer_method, "campus-vm/building-vm/dnp3", "AnalogOutput_index1", val).get(timeout=10)
+    rs = a.vip.rpc.call(peer, peer_method, device_name, "AnalogOutput_index1", val).get(timeout=10)
     print(f"========== rs {rs}, val {val}")
 
     # # validation
