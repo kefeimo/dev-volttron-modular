@@ -170,33 +170,33 @@ class OpenADRVenAgent(Agent):
         # _log.info("Starting OpenADRVen agent...")
         # gevent.spawn_later(3, self._start_asyncio_loop)
 
-    def _start_asyncio_loop(self) -> None:
-        loop = asyncio.get_event_loop()
-        loop.create_task(self.ven_client.run())
-        loop.run_forever()
-
-    # ***************** Methods for Servicing VTN Requests ********************
-
-    async def handle_event(self, event: Event) -> OpenADROpt:
-        """Publish event to the Volttron message bus. This coroutine will be called when there is an event to be handled.
-
-        :param event: The event sent from a VTN
-        :return: Message to VTN to opt in to the event.
-        """
-        openadr_event = OpenADREvent(event)
-        try:
-            _log.info(
-                f"Received event. Processing event now...\n Event signal:\n {pformat(openadr_event.get_event_signals())}"
-            )
-        except IndexError as e:
-            _log.debug(
-                f"Event signals is empty. {e} \n Showing whole event: {pformat(openadr_event)}"
-            )
-            pass
-
-        self.publish_event(openadr_event)
-
-        return OpenADROpt.OPT_IN
+    # def _start_asyncio_loop(self) -> None:
+    #     loop = asyncio.get_event_loop()
+    #     loop.create_task(self.ven_client.run())
+    #     loop.run_forever()
+    #
+    # # ***************** Methods for Servicing VTN Requests ********************
+    #
+    # async def handle_event(self, event: Event) -> OpenADROpt:
+    #     """Publish event to the Volttron message bus. This coroutine will be called when there is an event to be handled.
+    #
+    #     :param event: The event sent from a VTN
+    #     :return: Message to VTN to opt in to the event.
+    #     """
+    #     openadr_event = OpenADREvent(event)
+    #     try:
+    #         _log.info(
+    #             f"Received event. Processing event now...\n Event signal:\n {pformat(openadr_event.get_event_signals())}"
+    #         )
+    #     except IndexError as e:
+    #         _log.debug(
+    #             f"Event signals is empty. {e} \n Showing whole event: {pformat(openadr_event)}"
+    #         )
+    #         pass
+    #
+    #     self.publish_event(openadr_event)
+    #
+    #     return OpenADROpt.OPT_IN
 
     @RPC.export
     def add_report_capability(
@@ -330,6 +330,8 @@ class OpenADRVenAgent(Agent):
                 f"{VTN_URL} is required. Ensure {VTN_URL} is given a URL to the VTN."
             )
         return
+
+
 
 
 def main():
