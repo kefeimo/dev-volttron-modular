@@ -144,6 +144,7 @@ class Dnp3Driver(BasicRevert, BaseInterface):
 
     def get_point(self, point_name):
         register: Dnp3Register = self.get_register_by_name(point_name)
+        print(f"========== register: Dnp3Register = self.get_register_by_name(point_name) {register}")
 
         return register.value
 
