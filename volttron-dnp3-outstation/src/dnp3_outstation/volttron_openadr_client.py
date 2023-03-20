@@ -25,7 +25,7 @@ from openleadr.client import OpenADRClient
 from openleadr.objects import Event
 from volttron.utils import (format_timestamp, jsonapi)
 
-from openadr_ven.constants import (
+from dnp3_outstation.constants import (
     VEN_NAME,
     VTN_URL,
     DEBUG,

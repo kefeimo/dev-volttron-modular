@@ -31,19 +31,19 @@ from volttron.client.vip.agent.subsystems.rpc import RPC
 from volttron.utils import (format_timestamp, get_aware_utc_now, load_config,
                             setup_logging, vip_main)
 
-# from openadr_ven.volttron_openadr_client import (
-#     VolttronOpenADRClient,
-#     OpenADRClientInterface,
-#     OpenADREvent,
-#     OpenADRReportName,
-#     OpenADRMeasurements,
-#     OpenADROpt,
-# )
+from dnp3_outstation.volttron_openadr_client import (
+    VolttronOpenADRClient,
+    OpenADRClientInterface,
+    OpenADREvent,
+    OpenADRReportName,
+    OpenADRMeasurements,
+    OpenADROpt,
+)
 
-# from openadr_ven.constants import (REQUIRED_KEYS, VEN_NAME, VTN_URL, DEBUG,
-#                                    CERT, KEY, PASSPHRASE, VTN_FINGERPRINT,
-#                                    SHOW_FINGERPRINT, CA_FILE, VEN_ID,
-#                                    DISABLE_SIGNATURE, OPENADR_EVENT)
+from dnp3_outstation.constants import (REQUIRED_KEYS, VEN_NAME, VTN_URL, DEBUG,
+                                   CERT, KEY, PASSPHRASE, VTN_FINGERPRINT,
+                                   SHOW_FINGERPRINT, CA_FILE, VEN_ID,
+                                   DISABLE_SIGNATURE, OPENADR_EVENT)
 
 from openleadr.objects import Event
 
