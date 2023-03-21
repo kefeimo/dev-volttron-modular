@@ -52,15 +52,17 @@ import asyncio
 import sys
 import gevent
 
+
+from dnp3_python.dnp3station.outstation_new import MyOutStationNew
+from pydnp3 import opendnp3
+from volttron.client.vip.agent import Agent, Core, RPC
+
+
 setup_logging()
 _log = logging.getLogger(__name__)
 __version__ = "1.0"
 
-from dnp3_python.dnp3station.outstation_new import MyOutStationNew
-from volttron.client.vip.agent import Agent, Core, RPC
-
-
-class OpenADRVenAgent(Agent):
+class Dnp3OutstationAgent(Agent):
     """This is class is a subclass of the Volttron Agent; it is an OpenADR VEN client and is a wrapper around OpenLEADR,
     an open-source implementation of OpenADR 2.0.b for both servers, VTN, and clients, VEN.
     This agent creates an instance of OpenLEADR's VEN client, which is used to communicated with a VTN.
@@ -361,10 +363,77 @@ class OpenADRVenAgent(Agent):
         except Exception as e:
             _log.error(e)
 
+    @RPC.export
+    def outstation_get_db(self) -> dict:
+        """expose db"""
+        return self.outstation_application.db_handler.db
+
+    @RPC.export
+    def outstation_get_config(self):
+        """expose get_config"""
+        return self.outstation_application.get_config()
+
+    @RPC.export
+    def outstation_get_is_connected(self):
+        """expose is_connected, note: status, property"""
+        return self.outstation_application.is_connected
+
+    @RPC.export
+    def outstation_apply_update_analog_input(self, val, index):
+        """public interface to update analog-input point value
+        val: float
+        index: int, point index
+        """
+        if not isinstance(val, float):
+            raise f"val of type(val) should be float"
+        self.outstation_application.apply_update(opendnp3.Analog(value=val), index)
+        _log.debug(f"Updated outstation analog-input index: {index}, val: {val}")
+
+        return self.outstation_application.db_handler.db
+
+    @RPC.export
+    def outstation_apply_update_analog_output(self, val, index):
+        """public interface to update analog-output point value
+        val: float
+        index: int, point index
+        """
+
+        if not isinstance(val, float):
+            raise f"val of type(val) should be float"
+        self.outstation_application.apply_update(opendnp3.AnalogOutputStatus(value=val), index)
+        _log.debug(f"Updated outstation analog-output index: {index}, val: {val}")
+
+        return self.outstation_application.db_handler.db
+
+    @RPC.export
+    def outstation_apply_update_binary_input(self, val, index):
+        """public interface to update binary-input point value
+        val: bool
+        index: int, point index
+        """
+        if not isinstance(val, bool):
+            raise f"val of type(val) should be bool"
+        self.outstation_application.apply_update(opendnp3.Binary(value=val), index)
+        _log.debug(f"Updated outstation binary-input index: {index}, val: {val}")
+
+        return self.outstation_application.db_handler.db
+
+    @RPC.export
+    def outstation_apply_update_binary_output(self, val, index):
+        """public interface to update binary-output point value
+        val: bool
+        index: int, point index
+        """
+        if not isinstance(val, bool):
+            raise f"val of type(val) should be bool"
+        self.outstation_application.apply_update(opendnp3.BinaryOutputStatus(value=val), index)
+        _log.debug(f"Updated outstation binary-output index: {index}, val: {val}")
+
+        return self.outstation_application.db_handler.db
 
 def main():
     """Main method called to start the agent."""
-    vip_main(OpenADRVenAgent)
+    vip_main(Dnp3OutstationAgent)
 
 
 if __name__ == "__main__":
