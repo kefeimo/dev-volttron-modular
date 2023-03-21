@@ -52,15 +52,14 @@ import asyncio
 import sys
 import gevent
 
-
 from dnp3_python.dnp3station.outstation_new import MyOutStationNew
 from pydnp3 import opendnp3
 from volttron.client.vip.agent import Agent, Core, RPC
 
-
 setup_logging()
 _log = logging.getLogger(__name__)
 __version__ = "1.0"
+
 
 class Dnp3OutstationAgent(Agent):
     """This is class is a subclass of the Volttron Agent; it is an OpenADR VEN client and is a wrapper around OpenLEADR,
@@ -369,17 +368,17 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_get_config(self):
+    def outstation_get_config(self) -> dict:
         """expose get_config"""
         return self.outstation_application.get_config()
 
     @RPC.export
-    def outstation_get_is_connected(self):
+    def outstation_is_connected(self) -> bool:
         """expose is_connected, note: status, property"""
         return self.outstation_application.is_connected
 
     @RPC.export
-    def outstation_apply_update_analog_input(self, val, index):
+    def outstation_apply_update_analog_input(self, val: float, index: int) -> dict:
         """public interface to update analog-input point value
         val: float
         index: int, point index
@@ -392,7 +391,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_apply_update_analog_output(self, val, index):
+    def outstation_apply_update_analog_output(self, val: float, index: int) -> dict:
         """public interface to update analog-output point value
         val: float
         index: int, point index
@@ -406,7 +405,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_apply_update_binary_input(self, val, index):
+    def outstation_apply_update_binary_input(self, val: bool, index: int):
         """public interface to update binary-input point value
         val: bool
         index: int, point index
@@ -419,7 +418,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_apply_update_binary_output(self, val, index):
+    def outstation_apply_update_binary_output(self, val: bool, index: int):
         """public interface to update binary-output point value
         val: bool
         index: int, point index
@@ -430,6 +429,28 @@ class Dnp3OutstationAgent(Agent):
         _log.debug(f"Updated outstation binary-output index: {index}, val: {val}")
 
         return self.outstation_application.db_handler.db
+
+    @RPC.export
+    def outstation_update_config_with_restart(self,
+                                              outstation_ip: str = None,
+                                              port: int = None,
+                                              master_id: int = None,
+                                              outstation_id: int = None,
+                                              **kwargs):
+        config = self._dnp3_outstation_config.copy()
+        print(f"============ config 1 {config}")
+        for kwarg in [{"outstation_ip": outstation_ip},
+                      {"port": port},
+                      {"master_id": master_id}, {"outstation_id": outstation_id}]:
+            print(f"======== kwarg {kwarg}")
+            if list(kwarg.values())[0] is not None:
+                config.update(kwarg)
+        print(f"=========== port {port}")
+        print(f"============ config 2{config}")
+        self._dnp3_outstation_config = config
+        # # {'outstation_ip': '0.0.0.0', 'port': 20000, 'master_id': 2, 'outstation_id': 1}
+        self.outstation_reset()
+
 
 def main():
     """Main method called to start the agent."""
