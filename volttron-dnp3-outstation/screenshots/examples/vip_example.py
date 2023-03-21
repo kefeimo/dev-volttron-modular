@@ -26,9 +26,13 @@ def main():
     # rs = a.vip.rpc.call(peer, peer_method, ).get(timeout=10)
     # print(datetime.datetime.now(), "rs: ", rs)
 
-    peer = "dnp3.outstation"
-
+    peer = "dnp3_outstation"
     peer_method = "rpc_dummy"
+    rs = a.vip.rpc.call(peer, peer_method).get(timeout=5)
+    print(datetime.datetime.now(), "rs: ", rs)
+
+    peer = "dnp3_outstation"
+    peer_method = "outstation_reset"
     rs = a.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 

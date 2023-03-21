@@ -41,9 +41,9 @@ from dnp3_outstation.volttron_openadr_client import (
 )
 
 from dnp3_outstation.constants import (REQUIRED_KEYS, VEN_NAME, VTN_URL, DEBUG,
-                                   CERT, KEY, PASSPHRASE, VTN_FINGERPRINT,
-                                   SHOW_FINGERPRINT, CA_FILE, VEN_ID,
-                                   DISABLE_SIGNATURE, OPENADR_EVENT)
+                                       CERT, KEY, PASSPHRASE, VTN_FINGERPRINT,
+                                       SHOW_FINGERPRINT, CA_FILE, VEN_ID,
+                                       DISABLE_SIGNATURE, OPENADR_EVENT)
 
 from openleadr.objects import Event
 
@@ -87,19 +87,18 @@ class OpenADRVenAgent(Agent):
         print(f"===================== # **kwargs {kwargs}")
 
         # dnp3 outstation config
-        self.default_config
         # "outstation_ip": "0.0.0.0",
         # "master_id": 2,
         # "outstation_id": 1,
         # "port": 20000,
 
-        self.default_config = {'outstation_ip': '0.0.0.0', 'port': 20000,
-                               'master_id': 2, 'outstation_id': 1}
+        default_config: dict = {'outstation_ip': '0.0.0.0', 'port': 20000, 'master_id': 2, 'outstation_id': 1}
         # agent configuration using volttron config framework
         # get_volttron_cofig, set_volltron_config
         self._volttron_config: dict
+        self._dnp3_outstation_config = default_config
 
-        # TODO: get this part back
+        # TODO: get this part back or rearrange the config workflow logic
         config_when_installed = self._parse_config(config_path)
         # for dnp3 features
         # try:
@@ -111,7 +110,7 @@ class OpenADRVenAgent(Agent):
         #     self.outstation_application = MyOutStationNew(**self.default_config)
         #     _log.info(f"init dnp3 outstation with {self.default_config}")
 
-        self.outstation_application = MyOutStationNew(**self.default_config)
+        self.outstation_application = MyOutStationNew(**default_config)
 
         # SubSystem/ConfigStore
         self.vip.config.set_default("config", self.default_config)
@@ -120,6 +119,15 @@ class OpenADRVenAgent(Agent):
             actions=["NEW", "UPDATE"],
             pattern="config",
         )  # TODO: understand what vip.config.subscribe does
+
+    @property
+    def dnp3_outstation_config(self):
+        return self._dnp3_outstation_config
+
+    @dnp3_outstation_config.setter
+    def dnp3_outstation_config(self, config: dict):
+        # TODO: add validation
+        self._dnp3_outstation_config = config
 
     def _config_callback_dummy(self, config_name: str, action: str,
                                contents: Dict) -> None:
@@ -332,8 +340,26 @@ class OpenADRVenAgent(Agent):
         return
 
     @RPC.export
-    def rpc_dummy(self):
-        return "something something"
+    def rpc_dummy(self) -> str:
+        """
+        For testing rpc call
+        """
+        return "This is a dummy rpc call"
+
+    @RPC.export
+    def outstation_reset(self, **kwargs):
+        """update`self._volttron_config`, then init a new outstation.
+        For post-configuration and immediately take effect.
+        Note: will start a new outstation instance and the old database data will lose"""
+        # self.dnp3_outstation_config(**kwargs)
+        try:
+            self.outstation_application.shutdown()
+            outstation_app_new = MyOutStationNew(**self.dnp3_outstation_config)
+            self.outstation_application = outstation_app_new
+            self.outstation_application.start()
+            _log.info(f"Outstation has restarted")
+        except Exception as e:
+            _log.error(e)
 
 
 def main():
