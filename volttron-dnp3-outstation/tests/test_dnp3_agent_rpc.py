@@ -62,7 +62,7 @@ def test_outstation_get_config(vip_agent):
 def test_outstation_is_connected(vip_agent):
     peer = dnp3_vip_identity
     method = Dnp3OutstationAgent.outstation_is_connected
-    peer_method = "outstation_get_is_connected"
+    peer_method = "outstation_is_connected"
     rs = vip_agent.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
