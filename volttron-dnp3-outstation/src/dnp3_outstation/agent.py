@@ -143,11 +143,12 @@ class Dnp3OutstationAgent(Agent):
         return "This is a dummy rpc call"
 
     @RPC.export
-    def reset_outstation(self, **kwargs):
+    def reset_outstation(self):
         """update`self._dnp3_outstation_config`, then init a new outstation.
         For post-configuration and immediately take effect.
         Note: will start a new outstation instance and the old database data will lose"""
         # self.dnp3_outstation_config(**kwargs)
+        # TODO: this method might be refactored as internal helper method for `update_outstation`
         try:
             self.outstation_application.shutdown()
             outstation_app_new = MyOutStationNew(**self.dnp3_outstation_config)
@@ -168,7 +169,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.get_config()
 
     @RPC.export
-    def outstation_is_connected(self) -> bool:
+    def is_outstation_connected(self) -> bool:
         """expose is_connected, note: status, property"""
         return self.outstation_application.is_connected
 
