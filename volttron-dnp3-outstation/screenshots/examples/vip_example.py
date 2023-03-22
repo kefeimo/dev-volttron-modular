@@ -21,7 +21,7 @@ def main():
     print(datetime.datetime.now(), "rs: ", rs)
 
     # peer = "test-agent"
-    # peer_method = "outstation_get_config"
+    # peer_method = "get_outstation_config"
     #
     # rs = a.vip.rpc.call(peer, peer_method, ).get(timeout=10)
     # print(datetime.datetime.now(), "rs: ", rs)
@@ -32,7 +32,7 @@ def main():
     print(datetime.datetime.now(), "rs: ", rs)
 
     peer = "dnp3_outstation"
-    peer_method = "outstation_reset"
+    peer_method = "reset_outstation"
     rs = a.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 

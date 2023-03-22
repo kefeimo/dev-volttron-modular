@@ -143,7 +143,7 @@ class Dnp3OutstationAgent(Agent):
         return "This is a dummy rpc call"
 
     @RPC.export
-    def outstation_reset(self, **kwargs):
+    def reset_outstation(self, **kwargs):
         """update`self._dnp3_outstation_config`, then init a new outstation.
         For post-configuration and immediately take effect.
         Note: will start a new outstation instance and the old database data will lose"""
@@ -158,12 +158,12 @@ class Dnp3OutstationAgent(Agent):
             _log.error(e)
 
     @RPC.export
-    def outstation_get_db(self) -> dict:
+    def display_outstation_db(self) -> dict:
         """expose db"""
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_get_config(self) -> dict:
+    def get_outstation_config(self) -> dict:
         """expose get_config"""
         return self.outstation_application.get_config()
 
@@ -173,7 +173,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.is_connected
 
     @RPC.export
-    def outstation_apply_update_analog_input(self, val: float, index: int) -> dict:
+    def apply_update_analog_input(self, val: float, index: int) -> dict:
         """public interface to update analog-input point value
         val: float
         index: int, point index
@@ -186,7 +186,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_apply_update_analog_output(self, val: float, index: int) -> dict:
+    def apply_update_analog_output(self, val: float, index: int) -> dict:
         """public interface to update analog-output point value
         val: float
         index: int, point index
@@ -200,7 +200,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_apply_update_binary_input(self, val: bool, index: int):
+    def apply_update_binary_input(self, val: bool, index: int):
         """public interface to update binary-input point value
         val: bool
         index: int, point index
@@ -213,7 +213,7 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_apply_update_binary_output(self, val: bool, index: int):
+    def apply_update_binary_output(self, val: bool, index: int):
         """public interface to update binary-output point value
         val: bool
         index: int, point index
@@ -226,12 +226,12 @@ class Dnp3OutstationAgent(Agent):
         return self.outstation_application.db_handler.db
 
     @RPC.export
-    def outstation_update_config_with_restart(self,
-                                              outstation_ip: str = None,
-                                              port: int = None,
-                                              master_id: int = None,
-                                              outstation_id: int = None,
-                                              **kwargs):
+    def update_outstation(self,
+                          outstation_ip: str = None,
+                          port: int = None,
+                          master_id: int = None,
+                          outstation_id: int = None,
+                          **kwargs):
         """
         Update dnp3 outstation config and restart the application to take effect. By default,
         {'outstation_ip': '0.0.0.0', 'port': 20000, 'master_id': 2, 'outstation_id': 1}
@@ -243,7 +243,7 @@ class Dnp3OutstationAgent(Agent):
             if list(kwarg.values())[0] is not None:
                 config.update(kwarg)
         self._dnp3_outstation_config = config
-        self.outstation_reset()
+        self.reset_outstation()
 
 
 def main():

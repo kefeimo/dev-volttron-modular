@@ -30,31 +30,31 @@ def test_vip_agent(vip_agent):
 def test_dummy(vip_agent):
     peer = dnp3_vip_identity
     method = Dnp3OutstationAgent.rpc_dummy
-    peer_method = "rpc_dummy"
+    peer_method = method.__name__  # "rpc_dummy"
     rs = vip_agent.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
 
 def test_outstation_reset(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_reset
-    peer_method = "outstation_reset"
+    method = Dnp3OutstationAgent.reset_outstation
+    peer_method = method.__name__  # "reset_outstation"
     rs = vip_agent.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
 
 def test_outstation_get_db(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_get_db
-    peer_method = "outstation_get_db"
+    method = Dnp3OutstationAgent.display_outstation_db
+    peer_method = method.__name__  # "display_outstation_db"
     rs = vip_agent.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
 
 def test_outstation_get_config(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_get_config
-    peer_method = "outstation_get_config"
+    method = Dnp3OutstationAgent.get_outstation_config
+    peer_method = method.__name__  # "get_outstation_config"
     rs = vip_agent.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
@@ -62,15 +62,15 @@ def test_outstation_get_config(vip_agent):
 def test_outstation_is_connected(vip_agent):
     peer = dnp3_vip_identity
     method = Dnp3OutstationAgent.outstation_is_connected
-    peer_method = "outstation_is_connected"
+    peer_method = method.__name__  # "outstation_is_connected"
     rs = vip_agent.vip.rpc.call(peer, peer_method).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
 
 def test_outstation_apply_update_analog_input(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_apply_update_analog_input
-    peer_method = "outstation_apply_update_analog_input"
+    method = Dnp3OutstationAgent.apply_update_analog_input
+    peer_method = method.__name__  # "apply_update_analog_input"
     val, index = random.random(), random.choice(range(5))
     print(f"val: {val}, index: {index}")
     rs = vip_agent.vip.rpc.call(peer, peer_method, val, index).get(timeout=5)
@@ -83,8 +83,8 @@ def test_outstation_apply_update_analog_input(vip_agent):
 
 def test_outstation_apply_update_analog_output(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_apply_update_analog_output
-    peer_method = "outstation_apply_update_analog_output"
+    method = Dnp3OutstationAgent.apply_update_analog_output
+    peer_method = method.__name__  # "apply_update_analog_output"
     val, index = random.random(), random.choice(range(5))
     print(f"val: {val}, index: {index}")
     rs = vip_agent.vip.rpc.call(peer, peer_method, val, index).get(timeout=5)
@@ -97,8 +97,8 @@ def test_outstation_apply_update_analog_output(vip_agent):
 
 def test_outstation_apply_update_binary_input(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_apply_update_binary_input
-    peer_method = "outstation_apply_update_binary_input"
+    method = Dnp3OutstationAgent.apply_update_binary_input
+    peer_method = method.__name__  # "apply_update_binary_input"
     val, index = random.choice([True, False]), random.choice(range(5))
     print(f"val: {val}, index: {index}")
     rs = vip_agent.vip.rpc.call(peer, peer_method, val, index).get(timeout=5)
@@ -111,8 +111,8 @@ def test_outstation_apply_update_binary_input(vip_agent):
 
 def test_outstation_apply_update_binary_output(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_apply_update_binary_output
-    peer_method = "outstation_apply_update_binary_output"
+    method = Dnp3OutstationAgent.apply_update_binary_output
+    peer_method = method.__name__  # "apply_update_binary_output"
     val, index = random.choice([True, False]), random.choice(range(5))
     print(f"val: {val}, index: {index}")
     rs = vip_agent.vip.rpc.call(peer, peer_method, val, index).get(timeout=5)
@@ -125,14 +125,14 @@ def test_outstation_apply_update_binary_output(vip_agent):
 
 def test_outstation_update_config_with_restart(vip_agent):
     peer = dnp3_vip_identity
-    method = Dnp3OutstationAgent.outstation_update_config_with_restart
-    peer_method = "outstation_update_config_with_restart"
+    method = Dnp3OutstationAgent.update_outstation
+    peer_method = method.__name__  # "update_outstation"
     port_to_set = 20001
     rs = vip_agent.vip.rpc.call(peer, peer_method, port=port_to_set).get(timeout=5)
     print(datetime.datetime.now(), "rs: ", rs)
 
     # verify
-    rs = vip_agent.vip.rpc.call(peer, "outstation_get_config").get(timeout=5)
+    rs = vip_agent.vip.rpc.call(peer, "get_outstation_config").get(timeout=5)
     port_new = rs.get("port")
     # print(f"========= port_new {port_new}")
     assert port_new == port_to_set
