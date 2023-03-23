@@ -65,12 +65,20 @@ class Dnp3OutstationAgent(Agent):
         default_config: dict = {'outstation_ip': '0.0.0.0', 'port': 20000, 'master_id': 2, 'outstation_id': 1}
         # agent configuration using volttron config framework
         # self._dnp3_outstation_config = default_config
-
-        # TODO: get this part back or rearrange the config workflow logic
         config_from_path = self._parse_config(config_path)
-        self._dnp3_outstation_config = config_from_path
 
-        self.outstation_application = MyOutStationNew(**self._dnp3_outstation_config)
+        # TODO: improve this logic by refactoring out the MyOutstationNew init,
+        #  and add config from "config store"
+        try:
+            _log.info("Using config_from_path {config_from_path}")
+            self._dnp3_outstation_config = config_from_path
+            self.outstation_application = MyOutStationNew(**self._dnp3_outstation_config)
+        except Exception as e:
+            _log.error(e)
+            _log.info(f"Failed to use config_from_path {config_from_path}"
+                      f"Using default_config {default_config}")
+            self._dnp3_outstation_config = default_config
+            self.outstation_application = MyOutStationNew(**self._dnp3_outstation_config)
 
         # SubSystem/ConfigStore
         self.vip.config.set_default("config", default_config)
