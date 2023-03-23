@@ -2,5 +2,5 @@
   "outstation_ip": "0.0.0.0",
   "master_id": 2,
   "outstation_id": 1,
-  "port":  21000
+  "port":  20000
 }
