@@ -29,11 +29,6 @@ from volttron.client.messaging import (headers)
 from volttron.utils import (format_timestamp, get_aware_utc_now, load_config,
                             setup_logging, vip_main)
 
-from dnp3_outstation.constants import (REQUIRED_KEYS, VEN_NAME, VTN_URL, DEBUG,
-                                       CERT, KEY, PASSPHRASE, VTN_FINGERPRINT,
-                                       SHOW_FINGERPRINT, CA_FILE, VEN_ID,
-                                       DISABLE_SIGNATURE, OPENADR_EVENT)
-
 import logging
 import sys
 import gevent
@@ -48,14 +43,10 @@ __version__ = "1.0"
 
 
 class Dnp3OutstationAgent(Agent):
-    """This is class is a subclass of the Volttron Agent; it is an OpenADR VEN client and is a wrapper around OpenLEADR,
-    an open-source implementation of OpenADR 2.0.b for both servers, VTN, and clients, VEN.
-    This agent creates an instance of OpenLEADR's VEN client, which is used to communicated with a VTN.
-    OpenADR (Automated Demand Response) is a standard for alerting and responding
-    to the need to adjust electric power consumption in response to fluctuations in grid demand.
-    OpenADR communications are conducted between Virtual Top Nodes (VTNs) and Virtual End Nodes (VENs).
-
-    :param config_path: path to agent config
+    """This is class is a subclass of the Volttron Agent;
+        This agent is an implementation of a DNP3 outstation;
+        The agent overrides @Core.receiver methods to modify agent life cycle behavior;
+        The agent exposes @RPC.export as public interface utilizing RPC calls.
     """
 
     def __init__(self, config_path: str, **kwargs) -> None:
@@ -124,7 +115,7 @@ class Dnp3OutstationAgent(Agent):
 
     # ***************** Helper methods ********************
     def _parse_config(self, config_path: str) -> Dict:
-        """Parses the OpenADR agent's configuration file.
+        """Parses the agent's configuration file.
 
         :param config_path: The path to the configuration file
         :return: The configuration

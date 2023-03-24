@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "Volttron OpenADR VEN"
+project = "Volttron DNP3 Outstation"
 copyright = "2022, Volttron Team"
 author = "Volttron Team"
 

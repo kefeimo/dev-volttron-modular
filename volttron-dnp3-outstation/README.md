@@ -140,31 +140,32 @@ work out-of-the-box. Please feel free to refer to related documentations for det
 # Basic Usage Example
 
 Like other VOLTTRON agent, the volttron-dnp3-outstation agent provides public interface and can be evoked by VOLTTRON
-RPC calls. Please see [run_volttron_dnp3_outstation_cli.py](./examples/run_volttron_dnp3_outstation_cli.py) for
+RPC calls. The volttron-dnp3-outstation provided a commandline interface `vdnp3_outstation` as an RPC method wrapper.
+Please see [run_volttron_dnp3_outstation_cli.py](./src/vdnp3_outstation/run_volttron_dnp3_outstation_cli.py) for
 implementation details of the RPC examples.
 
-1. (Optional) Inspect the dnp3 outstation cli help menu
+1. (Optional) Inspect the dnp3 outstation cli help menu.
 
    ```shell
-   (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ python -m vdnp3_outstation -h
+   (env) kefei@ubuntu-22:~/sandbox/dnp3-driver-sandbox$ vdnp3_outstation -h
    usage: dnp3-outstation [-h] [-aid <peer-name>]
    
-   Run a dnp3 outstation agent. Specify agent identity, by default `dnp3-outstation-agent`
+   Run a dnp3 outstation agent. Specify agent identity, by default `dnp3_outstation`
    
    options:
      -h, --help            show this help message and exit
      -aid <peer-name>, --agent-identity <peer-name>
-                           specify agent identity (parsed as peer-name for rpc call), default 'dnp3-outstation-agent'.
+                           specify agent identity (parsed as peer-name for rpc call), default 'dnp3_outstation'.
 
    ```
 
 1. Start the dnp3 outstation cli
 
-   Start the volttron-dnp3-outstation cli with `python -m vdnp3_outstation --agent-identity <agent-id>`. If you
+   Start the volttron-dnp3-outstation cli with `vdnp3_outstation --agent-identity <agent-id>`. If you
    follow along this demo, the agent vip-identity should be "dnp3_outstation".
 
    ```shell
-   (env) kefei@ubuntu-22:~/sandbox/dnp3-agent-sandbox$ python -m vdnp3_outstation --agent-identity dnp3_outstation
+   (env) kefei@ubuntu-22:~/sandbox/dnp3-agent-sandbox$ vdnp3_outstation --agent-identity dnp3_outstation
    2023-03-23 11:51:25,975 root DEBUG: Creating ZMQ Core None
    2023-03-23 11:51:25,975 volttron.client.vip.agent.core DEBUG: address: ipc://@/home/kefei/.volttron/run/vip.socket
    2023-03-23 11:51:25,975 volttron.client.vip.agent.core DEBUG: identity: 08953498-18e6-4070-9576-521bad3e82be
@@ -219,7 +220,8 @@ implementation details of the RPC examples.
     ```
 
    Note: by default, both the volttron-dnp3-outstation and the dnp3demo master uses configurations to
-   assure valid connection out-of-the-box. e.g., port=20000. Feel free to configure the connection parameters as desired.
+   assure valid connection out-of-the-box. e.g., port=20000. Feel free to configure the connection parameters as
+   desired.
 
 1. Basic volttron-dnp3-outstation operations
      ```

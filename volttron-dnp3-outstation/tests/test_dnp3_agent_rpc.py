@@ -3,6 +3,7 @@ This test suits focus on exposed RPC calls.
 It utilizes a vip agent to evoke the RPC calls.
 The volltron instance and dnp3-agent is start manually.
 Note: need to define VOLTTRON_HOME and vip-identity for dnp3 outstation agent
+Note: The `launch-agent` script can be used to start the dnp3 outstation agent.
 """
 import pytest
 import os

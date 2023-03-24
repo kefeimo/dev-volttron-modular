@@ -14,7 +14,7 @@ env:
   LANG: en_US.utf-8
   LC_ALL: en_US.utf-8
   PYTHON_VERSION: '3.8'
-  PROJECT_NAME: volttron-openadr-ven
+  PROJECT_NAME: volttron-dnp3-outstation
   POETRY_VERSION: 1.2.2
 
 jobs:

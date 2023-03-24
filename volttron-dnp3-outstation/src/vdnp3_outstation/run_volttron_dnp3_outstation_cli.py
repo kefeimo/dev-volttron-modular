@@ -10,6 +10,8 @@ from volttron.client.vip.agent import build_agent
 from dnp3_outstation.agent import Dnp3OutstationAgent
 from volttron.client.vip.agent import Agent
 
+DNP3_AGENT_ID = "dnp3_outstation"
+
 stdout_stream = logging.StreamHandler(sys.stdout)
 stdout_stream.setFormatter(logging.Formatter('%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s'))
 
@@ -28,9 +30,9 @@ def input_prompt(display_str=None) -> str:
 
 
 def setup_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
-    parser.add_argument("-aid", "--agent-identity", action="store", default="dnp3-outstation-agent", type=str,
+    parser.add_argument("-aid", "--agent-identity", action="store", default=DNP3_AGENT_ID, type=str,
                         metavar="<peer-name>",
-                        help="specify agent identity (parsed as peer-name for rpc call), default 'dnp3-outstation-agent'.")
+                        help=f"specify agent identity (parsed as peer-name for rpc call), default '{DNP3_AGENT_ID}'.")
 
     return parser
 
@@ -63,7 +65,7 @@ def main(parser=None, *args, **kwargs):
         # Initialize parser
         parser = argparse.ArgumentParser(
             prog="dnp3-outstation",
-            description="Run a dnp3 outstation agent. Specify agent identity, by default `dnp3-outstation-agent`",
+            description=f"Run a dnp3 outstation agent. Specify agent identity, by default `{DNP3_AGENT_ID}`",
             # epilog="Thanks for using %(prog)s! :)",
         )
         parser = setup_args(parser)
@@ -72,7 +74,7 @@ def main(parser=None, *args, **kwargs):
     args = parser.parse_args()
     # create volttron vip agent to evoke dnp3-agent rpc calls
     a = build_agent()
-    peer = args.agent_identity  # note: default "dnp3-outstation-agent" or "test-agent"
+    peer = args.agent_identity  # note: default {DNP3_AGENT_ID} or "test-agent"
     # print(f"========= peer {peer}")
     check_agent_id_existence(peer, a)
 
